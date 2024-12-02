@@ -1,0 +1,40 @@
+MANUAL DE USO - MONITOR DE TEMPERATURA DE INVERNADERO
+
+ 1. INGRESAR AL SISTEMA
+- Asegúrate de que el servidor Flask esté corriendo.
+- Abre tu navegador web y dirígete a: http://127.0.0.1:5000/ .
+
+ 2. SELECCIONAR EL SENSOR Y LA FECHA
+- En la sección "ID del Sensor", verifica que el sensor "AJG1988" esté seleccionado (predefinido).
+- En la lista "Fecha", selecciona una fecha disponible para visualizar los datos registrados.
+
+ 3. CONSULTAR DATOS
+- Haz clic en el botón "Consultar Datos".
+- El sistema mostrará los datos registrados para la fecha seleccionada en:
+  - Un gráfico de líneas: Visualiza las temperaturas registradas por hora.
+  - Una tabla: Lista detallada con la fecha, hora, temperatura y acción de las cortinas.
+
+ 4. GENERAR NUEVOS DATOS
+- Haz clic en el botón "Generar Datos".
+- El sistema generará un nuevo registro de temperatura simulada.
+- La fecha seleccionable se actualizará automáticamente con los nuevos datos.
+
+ 5. INTERPRETAR LOS RESULTADOS
+- Gráfico: Observa las tendencias de temperatura por hora.
+- Tabla:
+  - "Acción Cortinas" indica si las cortinas deben abrirse, cerrarse o mantenerse:
+    - Cerrar: Temperatura baja (menos de 18°C).
+    - Abrir: Temperatura alta (más de 25°C).
+    - Mantener: Temperatura dentro del rango ideal (18°C - 25°C).
+
+ 6. NOTAS ADICIONALES
+- Si no aparecen datos para una fecha, asegúrate de haber generado registros utilizando el botón "Generar Datos".
+- Para agregar más sensores, consulta al administrador del sistema.
+
+ 7. SOLUCIÓN DE PROBLEMAS
+- No se cargan las fechas disponibles:
+  - Verifica la conexión con Firebase.
+  - Asegúrate de haber generado datos previamente.
+- Error al consultar datos:
+  - Asegúrate de seleccionar una fecha de la lista.
+  - Revisa la consola del navegador para identificar problemas adicionales.

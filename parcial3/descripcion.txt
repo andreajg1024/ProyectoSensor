@@ -1,0 +1,29 @@
+DESCRIPCIÓN DEL SISTEMA - MONITOR DE TEMPERATURA PARA INVERNADEROS
+
+Objetivo principal
+-El sistema permite registrar, visualizar y analizar los datos de temperatura en tiempo real o de manera histórica. Además, ofrece recomendaciones automáticas para el manejo de las cortinas del invernadero, optimizando la ventilación y reduciendo los riesgos de temperaturas inadecuadas que podrían afectar el cultivo.  
+
+Características principales
+
+1. Monitoreo de temperatura  
+   - Utiliza un sensor con identificador único (en este caso, "AJG1988") para medir la temperatura dentro del invernadero.  
+   - Los datos se almacenan en una base de datos (Firebase Realtime Database), lo que garantiza su accesibilidad y persistencia.  
+
+2. Visualización interactiva
+   - Presenta un gráfico de líneas que muestra las temperaturas registradas en diferentes momentos del día, facilitando la interpretación visual de los cambios de temperatura.  
+   - Incluye una tabla con detalles como la fecha, hora, temperatura registrada y la acción sugerida para las cortinas (abrir, cerrar o mantener).  
+
+3. Generación de datos simulados
+   - Para pruebas o demostraciones, el sistema puede generar automáticamente datos ficticios basados en un rango de temperaturas predefinido.  
+   - Estos datos simulan diferentes escenarios climáticos dentro del invernadero, como temperaturas bajas, ideales o altas.  
+
+4. Acciones automatizadas 
+   - Dependiendo de la temperatura registrada, el sistema sugiere las siguientes acciones para las cortinas del invernadero:  
+     - Abrir: Si la temperatura supera los 25°C.  
+     - Cerrar: Si la temperatura es inferior a 18°C.  
+     - Mantener: Si la temperatura está dentro del rango ideal de 18°C a 25°C.  
+
+5. Interfaz de usuario
+   - La interfaz incluye controles intuitivos como menús desplegables para seleccionar fechas, botones para consultar datos y opciones para generar nuevos registros.  
+   - Es compatible con navegadores web y ofrece una experiencia sencilla para usuarios con cualquier nivel de experiencia tecnológica.  
+   

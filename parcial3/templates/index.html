@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor de Temperatura - Invernadero</title>
+  <link rel="stylesheet" href="../static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="main-container">
+  <header>
+    <h1>Monitor de Temperatura del Invernadero</h1>
+  </header>
+
+  <div class="content">
+    <!-- Sección de Controles y Botones -->
+    <section class="controls-section">
+      <div class="controls">
+        <div class="control">
+          <label for="sensor-id">ID del Sensor:</label>
+          <select id="sensor-id">
+            <option value="AJG1988" selected>AJG1988</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="fecha">Fecha:</label>
+          <select id="fecha">
+            <option value="">Seleccione una fecha</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button class="btn primary" onclick="consultarDatos()">Consultar Datos</button>
+        <button class="btn secondary" onclick="generarTemperatura()">Generar Datos</button>
+      </div>
+    </section>
+
+    <!-- Gráfico -->
+    <section class="chart-section">
+      <canvas id="grafico"></canvas>
+    </section>
+
+    <!-- Tabla de Datos -->
+    <section class="table-section">
+      <table id="tabla">
+        <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>ID del Sensor</th>
+          <th>Temperatura</th>
+          <th>Acción Cortinas</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<script>
+  let etiquetas = [];
+  let valores = [];
+  let accionesCortinas = [];
+
+  document.addEventListener("DOMContentLoaded", () => {
+    cargarFechas();
+    inicializarGrafica();
+  });
+
+  const inicializarGrafica = () => {
+    const ctx = document.getElementById('grafico').getContext('2d');
+    window.miGrafico = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: etiquetas,
+        datasets: [{
+          label: 'Temperatura (°C)',
+          data: valores,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 2,
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { title: { display: true, text: 'Hora' } },
+          y: { title: { display: true, text: 'Temperatura (°C)' } }
+        }
+      }
+    });
+  };
+
+  const actualizarGrafica = () => {
+    window.miGrafico.data.labels = etiquetas;
+    window.miGrafico.data.datasets[0].data = valores;
+    window.miGrafico.update();
+  };
+
+  const cargarFechas = async () => {
+    try {
+      const response = await fetch('/api/fechas-temperatura?idsensor=AJG1988');
+      const fechas = await response.json();
+
+      if (response.ok) {
+        const fechaSelect = document.getElementById('fecha');
+        fechaSelect.innerHTML = '<option value="">Seleccione una fecha</option>';
+        fechas.forEach(fecha => {
+          const option = document.createElement('option');
+          option.value = fecha;
+          option.textContent = fecha;
+          fechaSelect.appendChild(option);
+        });
+      } else {
+        alert(fechas.error || "Error al cargar las fechas.");
+      }
+    } catch (error) {
+      console.error("Error al cargar las fechas:", error);
+    }
+  };
+
+  const generarTemperatura = async () => {
+    try {
+      const response = await fetch('/api/generar-temperatura', { method: 'POST' });
+      const resultado = await response.json();
+
+      if (response.ok) {
+        alert("Datos generados correctamente");
+        cargarFechas(); // Actualizar las fechas disponibles
+      } else {
+        alert(resultado.error || "Error al generar datos.");
+      }
+    } catch (error) {
+      console.error("Error al generar datos:", error);
+    }
+  };
+
+  const consultarDatos = async () => {
+    const fecha = document.getElementById('fecha').value;
+
+    if (!fecha) {
+      alert("Por favor, selecciona una fecha.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/temperatura?idsensor=AJG1988&fecha=${fecha}`);
+      const datos = await response.json();
+
+      if (response.ok) {
+        mostrarDatos(datos);
+      } else {
+        alert(datos.error || "Error al consultar datos.");
+      }
+    } catch (error) {
+      console.error("Error al consultar datos:", error);
+    }
+  };
+
+  const mostrarDatos = (datos) => {
+    const tablaBody = document.querySelector("#tabla tbody");
+    tablaBody.innerHTML = "";
+    etiquetas = [];
+    valores = [];
+    accionesCortinas = [];
+
+    datos.forEach(dato => {
+      const fila = `
+          <tr>
+            <td>${dato.fecha}</td>
+            <td>${dato.hora}</td>
+            <td>${dato.idsensor}</td>
+            <td>${dato.temperatura}</td>
+            <td>${dato.accion_cortinas}</td>
+          </tr>
+        `;
+      tablaBody.innerHTML += fila;
+
+      etiquetas.push(dato.hora);
+      valores.push(dato.temperatura);
+      accionesCortinas.push(dato.accion_cortinas);
+    });
+
+    actualizarGrafica();
+  };
+</script>
+</body>
+</html>
